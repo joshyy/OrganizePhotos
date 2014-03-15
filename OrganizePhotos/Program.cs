@@ -28,8 +28,16 @@ namespace OrganizePhotos
                     int dupSeq = 0;
                     DateTime dateTime;
                     using (var reader = new ExifReader(file))
-                    {
-                        if (!reader.GetTagValue(ExifTags.DateTimeOriginal, out dateTime)) continue;
+                    {                     
+                        try
+                        {
+                            if (!reader.GetTagValue(ExifTags.DateTimeOriginal, out dateTime)) { continue; }
+                        }
+                        catch (Exception x)
+                        {
+                            Console.WriteLine("skipping file: {0}-{1}", file, x.Message);
+                            continue;
+                        }
                     }
 
                     string subFolder = Path.Combine(creDirectory, dateTime.ToString("yyyy-MM-dd"));
